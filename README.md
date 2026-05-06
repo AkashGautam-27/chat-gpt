@@ -1,16 +1,73 @@
-# React + Vite
+🤖 ChatGPT Clone – AI Chatbot Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern AI-powered chatbot web application inspired by ChatGPT.
+Built using Next.js, React, and modern web technologies, this project provides a smooth and interactive conversational AI experience.
 
-Currently, two official plugins are available:
+🔗 Live Demo: https://chat-gpt-kappa-jade.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+📌 Features
+💬 Real-time AI chat interface
+⚡ Fast and responsive UI 
+🌙 Dark/Light theme toggle 
+🎨 Clean and modern design
+🧠 AI-powered responses (ChatGPT-like experience)
+📱 Fully responsive (mobile + desktop friendly)
+🔄 Smooth chat flow with message history
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🛠️ Tech Stack
+Frontend:  React
+Styling: Tailwind CSS 
+API: Gemini API 
+Deployment: Vercel
+🚀 Getting Started
 
-## Expanding the ESLint configuration
+Follow these steps to run the project locally:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone the repository
+git clone https://github.com/your-username/chatbot-project.git
+2. Install dependencies
+npm install
+3. Run development server
+npm run dev
+4. Open in browser
+http://localhost:3000
+
+
+📁 Project Structure
+
+- /app or /pages → UI routes
+- /components → Reusable components
+- /lib → API / helper functions
+- /styles → Styling files
+- /public → Images & assets
+
+
+🔑 Environment Variables
+
+Create a .env file:
+
+API_KEY=your_api_key_here
+
+
+📸 Screenshots
+![Chatbot UI](./public/screenshot.png)
+
+
+🎯 Future Improvements
+Voice chat support 🎤
+Chat memory / history storage
+User authentication 🔐
+Better AI model tuning
+
+
+
+👨‍💻 Author
+Akash Gautam
+GitHub: [AkashGautam-27]
+Project: https://chat-gpt-kappa-jade.vercel.app/
+
+
+📄 License
+This project is licensed under the MIT License.
+
