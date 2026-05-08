@@ -51,7 +51,7 @@ API_KEY=your_api_key_here
 
 
 📸 Screenshots
-![Chatbot UI](./public/screenshot.png)
+<img src="public/Screenshot.png" alt="Chatbot UI" width="700" />
 
 
 🎯 Future Improvements
