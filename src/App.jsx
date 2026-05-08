@@ -1,6 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import ReactMarkdown from 'react-markdown'
+import 'katex/dist/katex.min.css'
+import remarkMath from 'remark-math'
+import remarkGfm from 'remark-gfm'
+import rehypeKatex from 'rehype-katex'
 import { FaUserCircle } from 'react-icons/fa'
 import { BsRobot } from 'react-icons/bs'
 import { MdDarkMode, MdLightMode } from 'react-icons/md'
@@ -37,7 +41,27 @@ function App() {
             contents: [
               {
                 role: "user",
-                parts: [{ text: currentQuestion }]
+                parts: [{ text:  `
+You are a helpful AI assistant.
+
+Formatting Rules:
+
+- Use proper Markdown
+- Use headings and bullet points
+- Keep spacing clean
+- Use tables if needed
+
+ONLY IF the question contains mathematics:
+- Use LaTeX
+- Use $ $ for inline maths
+- Use $$ $$ for block maths
+- Solve step-by-step
+
+Do NOT force maths formatting on normal questions.
+
+Question:
+${currentQuestion}
+` }]
               }
             ]
           }
@@ -108,16 +132,75 @@ function App() {
               {msg.role === "ai" && <BsRobot className="text-2xl mt-1" />}
 
               <div
-                className={`px-4 py-3 rounded-xl max-w-[80%] sm:max-w-[70%] wrap-break-words ${msg.role === "user"
+                className={`px-4 py-3 rounded-xl max-w-[80%] sm:max-w-[70%] break-words p-3 ${msg.role === "user"
                   ? "bg-green-500 text-white"
                   : darkMode
                     ? "bg-gray-700"
                     : "bg-gray-300"
                   }`}
               >
-                {msg.role === "ai"
-                  ? <ReactMarkdown>{msg.text}</ReactMarkdown>
-                  : msg.text}
+  {msg.role === "ai" ? (
+     <div
+    className={`prose max-w-none ${
+      darkMode ? "prose-invert" : ""
+    }`}
+  >
+  <ReactMarkdown
+    remarkPlugins={[remarkMath, remarkGfm]}
+    rehypePlugins={[rehypeKatex]}
+    components={{
+      h1: ({ children }) => (
+        <h1 className="text-2xl font-bold my-3">{children}</h1>
+      ),
+
+      h2: ({ children }) => (
+        <h2 className="text-xl font-semibold my-2">{children}</h2>
+      ),
+
+      p: ({ children }) => (
+        <p className="leading-7 my-2">{children}</p>
+      ),
+
+      li: ({ children }) => (
+       <li className="ml-6 list-disc marker:text-green-400 my-1">{children}</li>
+      ),
+      table: ({ children }) => (
+  <table className="table-auto border-collapse border border-gray-500 my-3">
+    {children}
+  </table>
+),
+
+th: ({ children }) => (
+  <th className="border border-gray-500 px-3 py-2 bg-gray-800">
+    {children}
+  </th>
+),
+
+td: ({ children }) => (
+  <td className="border border-gray-500 px-3 py-2">
+    {children}
+  </td>
+),
+
+      code({ inline, children }) {
+        return inline ? (
+          <code className="bg-gray-800 text-green-400 px-1 py-0.5 rounded">
+            {children}
+          </code>
+        ) : (
+          <pre className="bg-black text-green-400 p-4 rounded-lg overflow-x-auto my-3">
+            <code>{children}</code>
+          </pre>
+        )
+      }
+    }}
+  >
+    {msg.text}
+  </ReactMarkdown>
+  </div>
+) : (
+  msg.text
+)}
               </div>
 
               {msg.role === "user" && <FaUserCircle className="text-2xl mt-1" />}
