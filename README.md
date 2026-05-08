@@ -78,5 +78,3 @@ Create a .env file:
 ##📄 License
 
 - This project is licensed under the MIT License.
-AIzaSyCgNdM4QQo17dx8ZIGKRNXwzCX9w7QbCQk
-AIzaSyDyulsiZ1kEKWQsoHKNBgUX0OLAqF-QSUY
