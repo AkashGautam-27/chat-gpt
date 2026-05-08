@@ -51,7 +51,10 @@ https://chat-gpt-kappa-jade.vercel.app/
 ##🔑 Environment Variables
 
 Create a .env file:
-- API_KEY=your_api_key_here
+- VITE_API_KEY_1=your_api_key_1_here
+- VITE_API_KEY_2=your_api_key_2_here
+- VITE_API_KEY_3=your_api_key_3_here
+
 
 
 ##📸 Screenshots
