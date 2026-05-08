@@ -24,15 +24,17 @@ function App() {
 
   async function generateAnswer() {
     if (!question.trim()) return
-    const API_KEY = import.meta.env.VITE_API_KEY
+  const API_KEYS = [
+  import.meta.env.VITE_API_KEY_1,
+  import.meta.env.VITE_API_KEY_2,
+  import.meta.env.VITE_API_KEY_3
+]
     const currentQuestion = question
     setMessages(prev => [...prev, { role: "user", text: currentQuestion }])
     setQuestion("")
     setLoading(true)
-
-    let retries = 3
-
-    while (retries > 0) {
+  let success = false
+    for(const API_KEY of API_KEYS) {
       try {
         const response = await axios({
           url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
@@ -70,21 +72,18 @@ ${currentQuestion}
         const aiText = response.data.candidates[0].content.parts[0].text
 
         setMessages(prev => [...prev, { role: "ai", text: aiText }])
+        success = true
         break
 
       } catch (error) {
         console.log(error.response?.data || error.message)
-
-        if (error.response?.status === 503) {
-          retries--
-          await new Promise(res => setTimeout(res, 2000))
-        } else {
-          setMessages(prev => [...prev, { role: "ai", text: "Sorry, something went wrong. Please try again." }])
-          break
-        }
+        continue
       }
     }
-
+        if (!success) {
+          setMessages(prev => [...prev, { role: "ai", text: "Sorry, something went wrong. Please try again." }])
+        }
+        
     setLoading(false)
   }
 
