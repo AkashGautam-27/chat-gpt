@@ -8,6 +8,7 @@ import rehypeKatex from 'rehype-katex'
 import { FaUserCircle } from 'react-icons/fa'
 import { BsRobot } from 'react-icons/bs'
 import { MdDarkMode, MdLightMode } from 'react-icons/md'
+import { motion, AnimatePresence } from 'framer-motion'
 
 function App() {
 
@@ -88,31 +89,34 @@ ${currentQuestion}
   }
 
   return (
-    <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"} flex flex-col h-screen`}>
+    <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"} flex flex-col h-screen transition-colors duration-500`}>
 
 
-      <div className={`${darkMode ? "bg-gray-800" : "bg-gray-300"} fixed top-0 left-0 w-full  p-4 z-10`}>
+      <div className={`${darkMode ? "bg-gray-800" : "bg-gray-300"} fixed top-0 left-0 w-full p-4 z-10 transition-colors duration-500`}>
         <div className="flex justify-between items-center max-w-3xl mx-auto">
 
           <h1 className="text-3xl font-bold">Chat-Bot</h1>
 
           <div className="flex gap-2">
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setDarkMode(!darkMode)}
-              className="p-2 rounded-md bg-gray-500"
+              className="p-2 rounded-md bg-gray-500 flex items-center justify-center cursor-pointer"
             >
               {darkMode ? <MdLightMode /> : <MdDarkMode />}
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
               type="button"
-
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setMessages([])}
-              className="bg-red-500 text-white px-3 py-1 rounded-md mr-3 "
+              className="bg-red-500 text-white px-3 py-1 rounded-md mr-3 cursor-pointer"
             >
               Clear
-            </button>
+            </motion.button>
           </div>
 
         </div>
@@ -121,23 +125,28 @@ ${currentQuestion}
       <div className="flex-1 overflow-y-auto pt-20 pb-28 px-4">
         <div className="max-w-3xl mx-auto flex flex-col gap-4">
 
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`flex items-start gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"
-                }`}
-            >
-
-              {msg.role === "ai" && <BsRobot className="text-2xl mt-1" />}
-
-              <div
-                className={`px-4 py-3 rounded-xl max-w-[80%] sm:max-w-[70%] break-words p-3 ${msg.role === "user"
-                  ? "bg-green-500 text-white"
-                  : darkMode
-                    ? "bg-gray-700"
-                    : "bg-gray-300"
+          <AnimatePresence initial={false}>
+            {messages.map((msg, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className={`flex items-start gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"
                   }`}
               >
+
+                {msg.role === "ai" && <BsRobot className="text-2xl mt-1 flex-shrink-0" />}
+
+                <div
+                  className={`px-4 py-3 rounded-xl max-w-[80%] sm:max-w-[70%] break-words p-3 ${msg.role === "user"
+                    ? "bg-green-500 text-white"
+                    : darkMode
+                      ? "bg-gray-700"
+                      : "bg-gray-300"
+                    }`}
+                >
   {msg.role === "ai" ? (
      <div
     className={`prose max-w-none ${
@@ -202,21 +211,50 @@ td: ({ children }) => (
 )}
               </div>
 
-              {msg.role === "user" && <FaUserCircle className="text-2xl mt-1" />}
+              {msg.role === "user" && <FaUserCircle className="text-2xl mt-1 flex-shrink-0" />}
 
-            </div>
+            </motion.div>
           ))}
+          </AnimatePresence>
 
-          {loading && (
-            <div className="text-left text-gray-400">AI is typing...</div>
-          )}
+          <AnimatePresence>
+            {loading && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center gap-2 text-left text-gray-400 pl-8"
+              >
+                <BsRobot className="text-xl" />
+                <span className="text-sm font-medium">AI is typing</span>
+                <div className="flex gap-1 items-center h-2">
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1.5 h-1.5 bg-gray-400 rounded-full"
+                      animate={{
+                        y: ["0%", "-50%", "0%"]
+                      }}
+                      transition={{
+                        duration: 0.6,
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        delay: i * 0.15,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div ref={chatEndRef}></div>
 
         </div>
       </div>
 
-      <div className={`${darkMode ? "bg-gray-800" : "bg-gray-300"} fixed bottom-0 left-0 w-full p-4`}>
+      <div className={`${darkMode ? "bg-gray-800" : "bg-gray-300"} fixed bottom-0 left-0 w-full p-4 transition-colors duration-500`}>
         <div className="flex max-w-3xl mx-auto gap-2">
           <input
             type="text"
@@ -228,13 +266,15 @@ td: ({ children }) => (
             onKeyDown={(e) => e.key === "Enter" && generateAnswer()}
           />
 
-          <button
+          <motion.button
+            whileHover={{ scale: loading ? 1 : 1.05 }}
+            whileTap={{ scale: loading ? 1 : 0.95 }}
             onClick={generateAnswer}
             disabled={loading}
-            className="bg-green-500 text-white disabled:opacity-50 px-5 rounded-md"
+            className="bg-green-500 text-white disabled:opacity-50 px-5 rounded-md cursor-pointer"
           >
             {loading ? "Thinking..." : "Send"}
-          </button>
+          </motion.button>
         </div>
       </div>
     </div>
